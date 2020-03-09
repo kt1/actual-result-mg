@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Post from './Post'
 
 const PostList = ({ posts }) => (
-  <ul>
+  <ul className="siimple-list">
     { posts.map((post, index) => 
         <Post key={index} {...post}/>
       )

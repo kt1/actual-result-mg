@@ -5,7 +5,10 @@ import GetPostList from '../containers/GetPostListContainer'
 
 const App = () => (  
   <div>
-    <GetPostList />
+    <div className="siimple-rule"></div>
+    <div>
+      <GetPostList />
+    </div>
   </div>
 )
 
