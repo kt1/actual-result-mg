@@ -1,40 +1,38 @@
 from flask import Flask, render_template, request, Response, abort
-# from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_cors import CORS
 import json
 import connect
 
-app = Flask(__name__, static_folder="./build/static", template_folder="./build")
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# app.config['SECRET_KEY'] = "secret"
+app = Flask(__name__, static_folder="./build/static",
+            template_folder="./build")
+CORS(app)
 cur = connect.getServerConnect()
 
-# class User(UserMixin):
-#     def __init__(self, id, name, password):
-#         self.id = id
-#         self.name = name
-#         self.password = password
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if(request.method == "POST"):
-        cur.execute("SELECT * FROM users WHERE username = " + request.form["email"] + "password = " + request.form["password"])
+        param = json.loads(request.data.decode("utf-8")).get("params")
+        cur.execute("SELECT * FROM users WHERE username = " + "\'" + param["email"] + "\'" + " and password = " + "\'" + param["password"] + "\'")
         results = cur.fetchall()
         if (len(results) > 0):
-            return Response('''
-            login success!<br />
-            <a href="/protected/">protected</a><br />
-            <a href="/logout/">logout</a>
-            ''')
+            return Response(
+                "true"
+            )
         else:
             # return abort(401)
-            return render_template("index.html")
+            return Response(
+                "false"
+            )
     else:
-        return render_template("index.html")
+        return Response(
+            "false"
+        )
 
 # user 一覧取得
 @app.route('/user', methods=['POST', 'GET'])
@@ -53,6 +51,7 @@ def userload():
                 'Access-Control-Allow-Origin': '*'
             }
         )
+
 
 if __name__ == "__main__":
     app.debug = True

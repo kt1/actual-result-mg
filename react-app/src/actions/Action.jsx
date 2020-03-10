@@ -1,5 +1,10 @@
 import axios from 'axios'
 
+axios.defaults.baseURL = 'http://0.0.0.0:8000'; // local
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.withCredentials = true;
+
 // 共通関数
 export const GET_POSTS_REQUEST = 'GET_POSTS_REQUEST'
 const getPostsRequest = () => {
@@ -29,7 +34,7 @@ const getPostsFailure = (error) => {
 export const login = (state) => {
   return (dispatch) => {
     dispatch(getPostsRequest())
-    return axios.post("http://0.0.0.0:8000/login", state)
+    return axios.post(axios.defaults.baseURL + `/login`, {params: {email: state.email, password: state.password}})
       .then(res =>
         dispatch(getPostsSuccess(res.data))
       ).catch(err => 
