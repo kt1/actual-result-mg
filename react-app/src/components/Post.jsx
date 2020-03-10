@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const Post = ({ id, username }) => (
-  <li>
+  <li className="siimple-list-item siimple--bg-white">
     { username }
   </li>
 )

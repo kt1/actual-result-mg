@@ -1,16 +1,42 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, abort
+from flask_cors import CORS
 import json
 import connect
 
-app = Flask(__name__, static_folder="./build/static", template_folder="./build")
+app = Flask(__name__, static_folder="./build/static",
+            template_folder="./build")
+CORS(app)
 cur = connect.getServerConnect()
+
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if(request.method == "POST"):
+        param = json.loads(request.data.decode("utf-8")).get("params")
+        cur.execute("SELECT * FROM users WHERE username = " + "\'" + param["email"] + "\'" + " and password = " + "\'" + param["password"] + "\'")
+        results = cur.fetchall()
+        if (len(results) > 0):
+            return Response(
+                "true"
+            )
+        else:
+            # return abort(401)
+            return Response(
+                "false"
+            )
+    else:
+        return Response(
+            "false"
+        )
+
+# user 一覧取得
 @app.route('/user', methods=['POST', 'GET'])
-def load():
+def userload():
     if request.method == 'GET':
         cur.execute("SELECT * from users")
         results = cur.fetchall()
@@ -25,7 +51,7 @@ def load():
                 'Access-Control-Allow-Origin': '*'
             }
         )
-        # return render_template('index.html', result=result)
+
 
 if __name__ == "__main__":
     app.debug = True
