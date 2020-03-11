@@ -54,3 +54,15 @@ export const getPosts = () => {
       )
   }
 }
+
+export const getSiteRecords = (userid) => {
+  return (dispatch) => {
+    dispatch(getPostsRequest())
+    return axios.get(axios.defaults.baseURL + `/siterecords`, {params: {userid: userid}})
+      .then(res =>
+        dispatch(getPostsSuccess(res.data))
+      ).catch(err => 
+        dispatch(getPostsFailure(err))
+      )
+  }
+}

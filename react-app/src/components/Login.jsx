@@ -34,14 +34,14 @@ class Login extends React.Component {
   }
 
   handleClickSubmit(e) {
-    console.log(this.state.email);
-    console.log(this.state.password);
-    this.store.dispatch(login(this.state))
-    render(
-      <Top />
-      , document.getElementById('root')
-    )
-    e.preventDefault();
+    return (this.store.dispatch(login(this.state)))
+    .then(res =>
+        render(
+          <Top userid={res.posts[0].id}/>
+          , document.getElementById('root')
+        )
+        
+      )
   }
 
   render() {
